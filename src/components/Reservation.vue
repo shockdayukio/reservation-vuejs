@@ -18,7 +18,7 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="hourlyWorkList in dailyWorkList.hourlyWorkList">
+        <template v-for="hourlyWorkList in hourlyWorkList">
           <tr :key="hourlyWorkList.time">
             <td>{{hourlyWorkList.time}}</td>
             <td v-for="(work, i) in hourlyWorkList.workList" :key="hourlyWorkList.time + '_' + i">
@@ -40,22 +40,20 @@
         startDate: moment(),
         dateList: [],
         weekNumber: 7,
-        dailyWorkList: {
-          startDate: "2019-10-10",
-          hourlyWorkList: [
-            {
-              time: "11:00" ,
-              workList: ["○", "×", "○", "×", "○", "×", "○"]
-            },
-            {
-              time: "12:00" ,
-              workList: ["○", "×", "○", "×", "○", "×", "○"]
-            },
-            {
-              time: "13:00" ,
-              workList: ["○", "×", "×", "×", "×", "×", "×"]
-            }
-         ]},
+        hourlyWorkList: [
+          {
+            time: "11:00" ,
+            workList: ["○", "×", "○", "×", "○", "×", "○"]
+          },
+          {
+            time: "12:00" ,
+            workList: ["○", "×", "○", "×", "○", "×", "○"]
+          },
+          {
+            time: "13:00" ,
+            workList: ["○", "×", "×", "×", "×", "×", "×"]
+          }
+       ],
       }
     },
     computed: {
@@ -73,11 +71,13 @@
     methods: {
       moveNextWeek: function() {
         var newDate = this.startDate.add(this.weekNumber, 'day')
+
+        //startDateプロパティの値が変われば、dateListの値も変わるようにしたい
         this.$set(this.dateList, 0, newDate)
-        this.dailyWorkList.startDate = newDate
+        this.startDate = newDate
 
         //ダミーデータ
-        this.dailyWorkList.hourlyWorkList = [
+        this.hourlyWorkList = [
           {
             time: "11:00" ,
             workList: ["×", "○", "×", "○", "×", "○","×" ]
@@ -94,21 +94,29 @@
       },
       movePreviousWeek: function() {
         var newDate = this.startDate.subtract(this.weekNumber, 'day')
-        this.$set(this.dateList, 0, newDate.format('MM月Do日(dd)'))
-        this.dailyWorkList.hourlyWorkList = [
+
+        //startDateプロパティの値が変われば、dateListの値も変わるようにしたい
+        this.$set(this.dateList, 0, newDate)
+
+        //ダミーデータ。上に同じ。
+        this.hourlyWorkList = [
           {
             time: "11:00" ,
-            workList: ["○", "×", "○", "×", "○", "×", "○"]
+            workList: ["○", "×", "×", "×", "○", "×", "○"]
           },
           {
             time: "12:00" ,
-            workList: ["○", "×", "○", "×", "○", "×", "○"]
+            workList: ["×", "×", "○", "×", "×", "×", "○"]
           },
           {
             time: "13:00" ,
-            workList: ["○", "×", "×", "×", "×", "×", "×"]
+            workList: ["×", "×", "×", "×", "×", "×", "×"]
           }
         ]
+      },
+      replaceWorkList: function() {
+        //startDateを開始日として、1週間分のhourlyWorkListの内容を再取得内容を再取得再代入
+        //returnで返す
       }
     }
   }

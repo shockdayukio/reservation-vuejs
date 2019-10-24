@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <Reservation msg="Welcome to Your Vue.js App"/>
+    <Reservation></Reservation>
+    <div>
+      <h2>予約</h2>
+      <p>10月10日（火）11:00~</p>
+    </div>
   </div>
 </template>
 

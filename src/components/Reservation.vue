@@ -1,11 +1,12 @@
 <template>
   <div>
+    <h2>予約一覧</h2>
     <p>
       <button @click="movePreviousWeek">前の1週間</button>
       <strong>{{startDate.format('MM')}}月</strong>
       <button @click="moveNextWeek">後の1週間</button>
     </p>
-    <table border="1">
+    <table border="1" align="center">
       <thead>
         <tr>
           <td></td>
@@ -27,6 +28,7 @@
         </template>
       </tbody>
     </table>
+    <hr>
   </div>
 </template>
 

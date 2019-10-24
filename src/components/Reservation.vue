@@ -74,10 +74,41 @@
       moveNextWeek: function() {
         var newDate = this.startDate.add(this.weekNumber, 'day')
         this.$set(this.dateList, 0, newDate)
+        this.dailyWorkList.startDate = newDate
+
+        //ダミーデータ
+        this.dailyWorkList.hourlyWorkList = [
+          {
+            time: "11:00" ,
+            workList: ["×", "○", "×", "○", "×", "○","×" ]
+          },
+          {
+            time: "12:00" ,
+            workList: ["×", "×", "×", "×", "×", "×", "×"]
+          },
+          {
+            time: "13:00" ,
+            workList: ["○", "×", "○", "×", "○", "×", "○"]
+          }
+        ]
       },
       movePreviousWeek: function() {
         var newDate = this.startDate.subtract(this.weekNumber, 'day')
         this.$set(this.dateList, 0, newDate.format('MM月Do日(dd)'))
+        this.dailyWorkList.hourlyWorkList = [
+          {
+            time: "11:00" ,
+            workList: ["○", "×", "○", "×", "○", "×", "○"]
+          },
+          {
+            time: "12:00" ,
+            workList: ["○", "×", "○", "×", "○", "×", "○"]
+          },
+          {
+            time: "13:00" ,
+            workList: ["○", "×", "×", "×", "×", "×", "×"]
+          }
+        ]
       }
     }
   }

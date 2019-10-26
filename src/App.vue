@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Reservation  v-on:send-reservation="date = $event"></Reservation>
-    <p>{{date}}</p>
+    <Reservation  v-on:send-reservation="text = $event"></Reservation>
+    <p>{{text}}</p>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   name: 'app',
   data() {
     return {
-      date: null
+      text: "日程未選択です"
     }
   },
   components: {

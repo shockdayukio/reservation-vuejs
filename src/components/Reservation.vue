@@ -22,7 +22,9 @@
           <tr :key="hourlyWorkList.time">
             <td>{{hourlyWorkList.time}}</td>
             <td v-for="(work, i) in hourlyWorkList.workList" :key="hourlyWorkList.time + '_' + i">
-              <a @click="sendReservation(dateList[i], hourlyWorkList.time, work)">{{work}}</a>
+              <a @click="sendReservation(dateList[i], hourlyWorkList.time, work)">
+                {{ showWorkStatus(work) }}
+              </a>
             </td>
           </tr>
         </template>
@@ -68,23 +70,17 @@
         var dateListClone = this.dateList
         dateListClone = []
         var date = moment(this.startDate)
-        dateListClone.push(date.format('DDdd'))
+        dateListClone.push(date.format('MM/DD(dd)'))
         for (  var i = 0;  i < (this.weekNumber - 1);  i++  ) {
-          dateListClone.push(date.add(1, 'day').format('DDdd'))
+          dateListClone.push(date.add(1, 'day').format('MM/DD(dd)'))
         }
         this.dateList = dateListClone
-      },
-      //ダミーデータ用
-      getRandomInt(max) {
-        // ランダムな配列
-        return Math.floor(Math.random() * Math.floor(max));
       },
       setWorkList() {
         //ダミー配列データ生成
         var array = [];
-        var max = 2;
         for (let i = 0; i < this.weekNumber; i++) {
-          array.push(this.getRandomInt(max));
+          array.push(Math.random() < 0.5);
         }
         return array
       },
@@ -102,10 +98,19 @@
             time: "13:00" ,
             workList: this.setWorkList()
         }]
-      }
-      ,
+      },
       sendReservation(date, time, work) {
-        this.$emit("send-reservation", date + time + work)//一旦startDate
+        var text = ""
+        if (work == true) {
+          text = date + time
+        } else {
+          text = "この日程は選択できません。"
+        }
+        this.$emit("send-reservation", text)
+
+      },
+      showWorkStatus(work) {
+        return work ? "o" : "x"
       }
     }
   };

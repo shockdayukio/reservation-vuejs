@@ -1,10 +1,7 @@
 <template>
   <div id="app">
-    <Reservation></Reservation>
-    <div>
-      <h2>予約</h2>
-      <p>10月10日（火）11:00~</p>
-    </div>
+    <Reservation  v-on:send-reservation="date = $event"></Reservation>
+    <p>{{date}}</p>
   </div>
 </template>
 
@@ -13,10 +10,15 @@ import Reservation from './components/Reservation.vue'
 
 export default {
   name: 'app',
+  data() {
+    return {
+      date: null
+    }
+  },
   components: {
     Reservation
   }
-}
+};
 </script>
 
 <style>

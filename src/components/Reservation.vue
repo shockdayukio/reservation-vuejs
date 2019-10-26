@@ -22,7 +22,7 @@
           <tr :key="hourlyWorkList.time">
             <td>{{hourlyWorkList.time}}</td>
             <td v-for="(work, i) in hourlyWorkList.workList" :key="hourlyWorkList.time + '_' + i">
-              <a href="https://camp-fire.jp/projects/view/179275">{{work}}</a>
+              <a @click="sendReservation(dateList[i], hourlyWorkList.time, work)">{{work}}</a>
             </td>
           </tr>
         </template>
@@ -35,7 +35,7 @@
 <script>
   import moment from 'moment'
   export default {
-    data: function(){
+    data(){
       return {
         dateList: [],
         weekNumber: 7,
@@ -48,23 +48,23 @@
     },
     computed: {
       startDate: {
-        get: function() {
+        get() {
           return moment()
         },
-        set: function(date) {
+        set(date) {
           this.setDateList(date)
           this.setHourlyWorkList()
         }
       }
     },
     methods: {
-      moveNextWeek: function() {
+      moveNextWeek() {
         this.startDate = this.startDate.add(this.weekNumber, 'day')
       },
-      movePreviousWeek: function() {
+      movePreviousWeek() {
         this.startDate = this.startDate.subtract(this.weekNumber, 'day')
       },
-      setDateList: function() {
+      setDateList() {
         var dateListClone = this.dateList
         dateListClone = []
         var date = moment(this.startDate)
@@ -75,11 +75,11 @@
         this.dateList = dateListClone
       },
       //ダミーデータ用
-      getRandomInt: function(max) {
+      getRandomInt(max) {
         // ランダムな配列
         return Math.floor(Math.random() * Math.floor(max));
       },
-      setWorkList: function() {
+      setWorkList() {
         //ダミー配列データ生成
         var array = [];
         var max = 2;
@@ -88,7 +88,7 @@
         }
         return array
       },
-      setHourlyWorkList: function() {
+      setHourlyWorkList() {
         this.hourlyWorkList = [
           {
             time: "11:00" ,
@@ -103,6 +103,10 @@
             workList: this.setWorkList()
         }]
       }
+      ,
+      sendReservation(date, time, work) {
+        this.$emit("send-reservation", date + time + work)//一旦startDate
+      }
     }
-  }
+  };
 </script>

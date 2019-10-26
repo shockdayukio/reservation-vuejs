@@ -10,7 +10,7 @@
       <thead>
         <tr>
           <td></td>
-          <template v-for="date in dateListFormatted">
+          <template v-for="date in dateList">
             <th :key="date">
               {{ date }}
             </th>
@@ -37,27 +37,34 @@
   export default {
     data: function(){
       return {
-        startDate: moment(),
         dateList: [],
         weekNumber: 7,
-        hourlyWorkList: [
-          {
-            time: "11:00" ,
-            workList: ["○", "×", "○", "×", "○", "×", "○"]
-          },
-          {
-            time: "12:00" ,
-            workList: ["○", "×", "○", "×", "○", "×", "○"]
-          },
-          {
-            time: "13:00" ,
-            workList: ["○", "×", "×", "×", "×", "×", "×"]
-          }
-       ],
+        hourlyWorkList: []
       }
     },
+    created() {
+      this.setDateList(this.startDate)
+      this.setHourlyWorkList()
+    },
     computed: {
-      dateListFormatted: function() {
+      startDate: {
+        get: function() {
+          return moment()
+        },
+        set: function(date) {
+          this.setDateList(date)
+          this.setHourlyWorkList()
+        }
+      }
+    },
+    methods: {
+      moveNextWeek: function() {
+        this.startDate = this.startDate.add(this.weekNumber, 'day')
+      },
+      movePreviousWeek: function() {
+        this.startDate = this.startDate.subtract(this.weekNumber, 'day')
+      },
+      setDateList: function() {
         var dateListClone = this.dateList
         dateListClone = []
         var date = moment(this.startDate)
@@ -65,58 +72,36 @@
         for (  var i = 0;  i < (this.weekNumber - 1);  i++  ) {
           dateListClone.push(date.add(1, 'day').format('DDdd'))
         }
-        return dateListClone
-      }
-    },
-    methods: {
-      moveNextWeek: function() {
-        var newDate = this.startDate.add(this.weekNumber, 'day')
-
-        //startDateプロパティの値が変われば、dateListの値も変わるようにしたい
-        this.$set(this.dateList, 0, newDate)
-        this.startDate = newDate
-
-        //ダミーデータ
+        this.dateList = dateListClone
+      },
+      //ダミーデータ用
+      getRandomInt: function(max) {
+        // ランダムな配列
+        return Math.floor(Math.random() * Math.floor(max));
+      },
+      setWorkList: function() {
+        //ダミー配列データ生成
+        var array = [];
+        var max = 2;
+        for (let i = 0; i < this.weekNumber; i++) {
+          array.push(this.getRandomInt(max));
+        }
+        return array
+      },
+      setHourlyWorkList: function() {
         this.hourlyWorkList = [
           {
             time: "11:00" ,
-            workList: ["×", "○", "×", "○", "×", "○","×" ]
+            workList: this.setWorkList()
           },
           {
             time: "12:00" ,
-            workList: ["×", "×", "×", "×", "×", "×", "×"]
+            workList: this.setWorkList()
           },
           {
             time: "13:00" ,
-            workList: ["○", "×", "○", "×", "○", "×", "○"]
-          }
-        ]
-      },
-      movePreviousWeek: function() {
-        var newDate = this.startDate.subtract(this.weekNumber, 'day')
-
-        //startDateプロパティの値が変われば、dateListの値も変わるようにしたい
-        this.$set(this.dateList, 0, newDate)
-
-        //ダミーデータ。上に同じ。
-        this.hourlyWorkList = [
-          {
-            time: "11:00" ,
-            workList: ["○", "×", "×", "×", "○", "×", "○"]
-          },
-          {
-            time: "12:00" ,
-            workList: ["×", "×", "○", "×", "×", "×", "○"]
-          },
-          {
-            time: "13:00" ,
-            workList: ["×", "×", "×", "×", "×", "×", "×"]
-          }
-        ]
-      },
-      replaceWorkList: function() {
-        //startDateを開始日として、1週間分のhourlyWorkListの内容を再取得内容を再取得再代入
-        //returnで返す
+            workList: this.setWorkList()
+        }]
       }
     }
   }
